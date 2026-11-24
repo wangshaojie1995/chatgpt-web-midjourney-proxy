@@ -6,7 +6,7 @@ import { homeStore } from '@/store';
 import { klingFeed, klingFetch } from '@/api/kling';
 import { t } from '@/locales';
 
-const f= ref({prompt:'',negative_prompt:'',image:'',image_tail:'',aspect_ratio:'1:1',mode:'std', duration:'5',model:'kling-v1-6'});
+const f= ref({prompt:'',negative_prompt:'',image:'',image_tail:'',aspect_ratio:'1:1',mode:'std', duration:'5',model_name:'kling-v2-6'});
 const st= ref({bili:0,isLoading:false,camera_type:''});
 
 const fsRef= ref() ; 
@@ -29,6 +29,8 @@ const mvOption= [
 {label:'kling-v1-6',value: 'kling-v1-6'}
 ,{label:'kling-v1-5',value: 'kling-v1-5'}
 ,{label:'kling-v1',value: 'kling-v1'}
+,{label:'kling-v2-master',value: 'kling-v2-master'}
+,{label:'kling-v2-6',value: 'kling-v2-6'}
  ]
 
 function selectFile(input:any){
@@ -74,6 +76,10 @@ const createImg = async ()=>{
         }
         //  mlog('abc>> ',  abc  );
         // return 
+        if (abc.model_name=='kling-v2-master') {
+            delete abc.mode;
+        }
+
         const d:any= await klingFetch('/v1/videos/'+ cat , abc  )
         mlog('img', d );
         klingFeed( d.data.task_id , cat ,  f.value.prompt )
@@ -105,7 +111,7 @@ onMounted(() => {
     
     <section class="mb-4 flex justify-between items-center" >
          <div>{{ $t('mjset.model') }}</div>
-         <n-select v-model:value="f.model" size="small" :options="mvOption"  class="!w-[70%]" />
+         <n-select v-model:value="f.model_name" size="small" :options="mvOption"  class="!w-[70%]" />
          
     </section>
       <section class="mb-4 flex justify-between items-center" >
